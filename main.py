@@ -32,54 +32,33 @@ resources = {
 
 OUT_OF_RESOURCES = False
 
-def make_espresso():
-    global resources
+
+def check_selection(word):
+    valid_selection = False
+    for drink in MENU:
+        if drink == word:
+            valid_selection = True
+    if valid_selection == False:
+        word = input("Please make a valid selection. (espresso/latte/cappuccino): ").lower()
+    return word
+
+
+def make_drink():
     global OUT_OF_RESOURCES
-    if resources["water"] < 50:
+    if resources["water"] < MENU[SELECTION]["ingredients"]["water"]:
         print("I'm sorry there's not enough water.")
         OUT_OF_RESOURCES = True
-    elif resources["coffee"] < 18:
-        print("I'm sorry there's not enough water.")
-        OUT_OF_RESOURCES = True
-    resources["water"] - 50
-    resources["coffee"] - 18
-    return resources
-
-
-def make_latte():
-    global resources
-    global OUT_OF_RESOURCES
-    if resources["water"] < 200:
-        print("I'm sorry there's not enough water.")
-        OUT_OF_RESOURCES = True
-    elif resources["milk"] < 150:
-        print("I'm sorry there's not enough water.")
-        OUT_OF_RESOURCES = True
-    elif resources["coffee"] < 24:
-        print("I'm sorry there's not enough water.")
-        OUT_OF_RESOURCES = True
-    else:
-        resources["water"] -= 200
-        resources["milk"] -= 150
-        resources["coffee"] -= 24
-    return resources
-
-
-def make_cappuccino():
-    global resources
-    global OUT_OF_RESOURCES
-    if resources["water"] < 250:
-        print("I'm sorry there's not enough water.")
-        OUT_OF_RESOURCES = True
-    elif resources["milk"] < 100:
-        print("I'm sorry there's not enough milk.")
-        OUT_OF_RESOURCES = True
-    elif resources["coffee"] < 24:
+    elif resources["coffee"] < MENU[SELECTION]["ingredients"]["coffee"]:
         print("I'm sorry there's not enough coffee.")
         OUT_OF_RESOURCES = True
-    resources["water"] -= 250
-    resources["milk"] -= 100
-    resources["coffee"] -= 24
+    resources["water"] -= MENU[SELECTION]["ingredients"]["water"]
+    resources["coffee"] -= MENU[SELECTION]["ingredients"]["coffee"]
+    if SELECTION == "espresso":
+        pass
+    elif resources["milk"] < MENU[SELECTION]["ingredients"]["milk"]:
+        print("I'm sorry there's not enough water.")
+        OUT_OF_RESOURCES = True
+        resources["milk"] -= MENU[SELECTION]["ingredients"]["milk"]
     return resources
 
 
@@ -97,18 +76,26 @@ def calculate_cost():
     else:
         print(f"Here's your {SELECTION}. Your change is {transaction}")
 
-while not OUT_OF_RESOURCES:
+
+while OUT_OF_RESOURCES == False:
     SELECTION = input("What would you like? (espresso/latte/cappuccino): ").lower()
-    if SELECTION == "espresso":
-        make_espresso()
-    elif SELECTION == "latte":
-        make_latte()
-    elif SELECTION == "cappuccino":
-        make_cappuccino()
-    else:
-        SELECTION = input("Please make a valid selection (espresso/latte/cappuccino): ").lower()
-    if OUT_OF_RESOURCES == False:
-        calculate_cost()
+    valid_selection = False
+    for drink in MENU:
+        if drink == SELECTION:
+            valid_selection = True
+    if valid_selection == True:
+        make_drink()
+        if OUT_OF_RESOURCES == False:
+            calculate_cost()
+
+
+
+
+
+
+
+
+
 
 
 
